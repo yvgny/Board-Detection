@@ -4,6 +4,9 @@ HScrollbar thresholdBar1;
 HScrollbar thresholdBar2;
 HScrollbar thresholdBar3;
 HScrollbar thresholdBar4;
+HScrollbar thresholdBar5;
+HScrollbar thresholdBar6;
+
 BlobDetection blob;
 PImage houghImg;
 PImage hough_test;
@@ -11,20 +14,25 @@ import processing.video.*;
 Capture cam;
 
 void settings() {
-  size(1600, 600);
+  size(1600, 900);
 }
 
 void setup() {
   // img = loadImage("board1.jpg");
   hough_test = loadImage("hough_test.bmp");
   //img_test = loadImage("board1Scharr.bmp");
-  thresholdBar1 = new HScrollbar(0, 580, 800, 20);
-  thresholdBar2 = new HScrollbar(0, 500, 800, 20);
+  thresholdBar1 = new HScrollbar(0, 480, 800, 20);
+  thresholdBar2 = new HScrollbar(0, 520, 800, 20);
   thresholdBar3 = new HScrollbar(0, 580, 800, 20);
-  thresholdBar4 = new HScrollbar(0, 500, 800, 20);
+  thresholdBar4 = new HScrollbar(0, 620, 800, 20);
+  thresholdBar5 = new HScrollbar(0, 680, 800, 20);
+  thresholdBar6 = new HScrollbar(0, 720, 800, 20);
   blob = new BlobDetection();
   //noLoop();
   String[] cameras = Capture.list();
+  for (String string : cameras) {
+    println(string);
+  }
   if (cameras.length == 0) {
     println("There are no cameras available for capture.");
     exit();
@@ -33,7 +41,7 @@ void setup() {
     for (int i = 0; i < cameras.length; i++) {
       println(cameras[i]);
     }
-    cam = new Capture(this, cameras[0]);
+    cam = new Capture(this, 640, 480);
     cam.start();
   }
 }
@@ -48,6 +56,9 @@ void draw() {
   thresholdBar2.update();
   thresholdBar3.update();
   thresholdBar4.update();
+  thresholdBar5.update();
+  thresholdBar6.update();
+
   background(color(255));
   //image(hue(img), 0, 0);
 
@@ -56,29 +67,36 @@ void draw() {
    
    */
 
-  PImage img1 = thresholdHSB(img, (int)map(thresholdBar4.getPos(), 0, 1, 0, 255), (int)map(thresholdBar3.getPos(), 0, 1, 0, 255), 0, 255, 0, 255);
+  PImage img1 = thresholdHSB(img, (int)map(thresholdBar1.getPos(), 0, 1, 0, 255), (int)map(thresholdBar2.getPos(), 0, 1, 0, 255), 
+   (int)map(thresholdBar3.getPos(), 0, 1, 0, 255), (int)map(thresholdBar4.getPos(), 0, 1, 0, 255),
+   (int)map(thresholdBar5.getPos(), 0, 1, 0, 255), (int)map(thresholdBar6.getPos(), 0, 1, 0, 255));
+   
+  // PImage img1 = thresholdHSB(img, 80, 160, 140, 255, 0, 130);
   image(img, 0, 0);
 
-  PImage img2 = gaussian_kernel(img1);
+  PImage img2 = blob.findConnectedComponents(img1, false);
+
+  PImage img3 = gaussian_kernel(img2);
   //image(img2, 800, 0);
 
 
-  PImage img3 = blob.findConnectedComponents(img2, true);
   //image(img3, 0, 600);
 
-  PImage img4 = scharr(img3);
+  PImage img4 = threshold_binary(scharr(img3), 230);
+  image(img4, 800, 0);
 
   drawLines(hough(img4));
-  image(img4, 800, 0);
 
 
   //image(blob.findConnectedComponents(img4,true), 800, 600);
 
-  /*thresholdBar1.display();
-   thresholdBar2.display();*/
+  thresholdBar1.display();
+  thresholdBar2.display();
 
   thresholdBar3.display();
   thresholdBar4.display();
+  thresholdBar5.display();
+  thresholdBar6.display();
 }
 
 /*
@@ -273,7 +291,7 @@ PImage threshold(PImage img, int threshold, color under, color above) {
 List<PVector> hough(PImage edgeImg) {
   float discretizationStepsPhi = 0.06f;
   float discretizationStepsR = 0.3f;
-  int minVotes=50;
+  int minVotes=30;
 
   // dimensions of the accumulator
   int phiDim = (int) (Math.PI / discretizationStepsPhi +1);

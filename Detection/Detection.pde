@@ -85,7 +85,7 @@ void draw() {
   PImage img4 = threshold_binary(scharr(img3), 230);
   image(img4, 800, 0);
 
-  drawLines(hough(img4, 10));
+  drawLines(hough(img4, 20));
 
 
   //image(blob.findConnectedComponents(img4,true), 800, 600);

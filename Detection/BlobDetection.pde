@@ -31,8 +31,9 @@ class BlobDetection {
             }
           }
           for (int lab : neighbours) {
-            labelsEquivalences.get(lab - 1).addAll(neighbours);
-            
+            for (int lab2 : neighbours) {
+              labelsEquivalences.get(lab - 1).addAll(labelsEquivalences.get(lab2 - 1));
+            }
           }
           if (foundLabel == currentLabel) {
             labels[x + y *input.width] = currentLabel++;

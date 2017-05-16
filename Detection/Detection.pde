@@ -1,5 +1,6 @@
 import processing.video.*; //<>//
 
+
 PImage img;
 PImage img_test;
 HScrollbar thresholdBar1;
@@ -13,6 +14,7 @@ BlobDetection blob;
 PImage houghImg;
 PImage hough_test;
 Capture cam;
+HoughComparator compare;
 
 void settings() {
   size(1600, 900);
@@ -65,11 +67,11 @@ void draw() {
    
    */
 
-  /*PImage img1 = thresholdHSB(img, (int)map(thresholdBar1.getPos(), 0, 1, 0, 255), (int)map(thresholdBar2.getPos(), 0, 1, 0, 255), 
-   (int)map(thresholdBar3.getPos(), 0, 1, 0, 255), (int)map(thresholdBar4.getPos(), 0, 1, 0, 255),
-   (int)map(thresholdBar5.getPos(), 0, 1, 0, 255), (int)map(thresholdBar6.getPos(), 0, 1, 0, 255));
-   
-  */ PImage img1 = thresholdHSB(img, 80, 160, 70, 255, 0, 220);
+  PImage img1 = thresholdHSB(img, (int)map(thresholdBar1.getPos(), 0, 1, 0, 255), (int)map(thresholdBar2.getPos(), 0, 1, 0, 255), 
+    (int)map(thresholdBar3.getPos(), 0, 1, 0, 255), (int)map(thresholdBar4.getPos(), 0, 1, 0, 255), 
+    (int)map(thresholdBar5.getPos(), 0, 1, 0, 255), (int)map(thresholdBar6.getPos(), 0, 1, 0, 255));
+
+  // PImage img1 = thresholdHSB(img, 80, 160, 140, 255, 0, 130);
   image(img, 0, 0);
 
   PImage img2 = blob.findConnectedComponents(img1, true);
@@ -80,10 +82,10 @@ void draw() {
 
   //image(img3, 0, 600);
 
-  PImage img4 = threshold_binary(scharr(img3), 200);
-  image(img2, 800, 0);
+  PImage img4 = threshold_binary(scharr(img3), 230);
+  image(img4, 800, 0);
 
-  drawLines(hough(img4));
+  drawLines(hough(img4, 10));
 
 
   //image(blob.findConnectedComponents(img4,true), 800, 600);
@@ -286,10 +288,11 @@ PImage threshold(PImage img, int threshold, color under, color above) {
   return result;
 }
 
-List<PVector> hough(PImage edgeImg) {
+List<PVector> hough(PImage edgeImg, int nLines) {
+  ArrayList<Integer> bestCandidates = new ArrayList<Integer> ();
   float discretizationStepsPhi = 0.06f;
   float discretizationStepsR = 0.3f;
-  int minVotes=30;
+  int minVotes=15;
 
   // dimensions of the accumulator
   int phiDim = (int) (Math.PI / discretizationStepsPhi +1);
@@ -320,13 +323,18 @@ List<PVector> hough(PImage edgeImg) {
   ArrayList<PVector> lines=new ArrayList<PVector>(); 
   for (int idx = 0; idx < accumulator.length; idx++) {
     if (accumulator[idx] > minVotes) {
-      // first, compute back the (r, phi) polar coordinates:
-      int accPhi = (int) (idx / (rDim)); 
-      int accR = idx - (accPhi) * (rDim); 
-      float r = (accR - (rDim) * 0.5f) * discretizationStepsR; 
-      float phi = accPhi * discretizationStepsPhi; 
-      lines.add(new PVector(r, phi));
+      bestCandidates.add(idx);
     }
+  }
+  compare = new HoughComparator(accumulator);
+  bestCandidates.sort(compare);
+  for (int i = 0; i < min(nLines, bestCandidates.size()); i++) {
+    // first, compute back the (r, phi) polar coordinates:
+    int accPhi = (int) (bestCandidates.get(i) / (rDim)); 
+    int accR = bestCandidates.get(i) - (accPhi) * (rDim); 
+    float r = (accR - (rDim) * 0.5f) * discretizationStepsR; 
+    float phi = accPhi * discretizationStepsPhi;
+    lines.add(new PVector(r, phi));
   }
   houghImg = createImage(rDim, phiDim, ALPHA);
   for (int i = 0; i < accumulator.length; i++) {

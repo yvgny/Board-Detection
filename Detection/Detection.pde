@@ -1,5 +1,5 @@
-import processing.video.*; //<>//
-
+import processing.video.*; //<>// //<>//
+import java.util.function.*;
 
 PImage img;
 PImage img_test;
@@ -321,9 +321,14 @@ List<PVector> hough(PImage edgeImg, int nLines) {
     }
   }
   ArrayList<PVector> lines=new ArrayList<PVector>(); 
-  for (int idx = 0; idx < accumulator.length; idx++) {
-    if (accumulator[idx] > minVotes) {
-      bestCandidates.add(idx);
+  for (int y = 0; y < edgeImg.height; y++) {
+    for (int x = 0; x < edgeImg.width; x++) {
+      if (accumulator[idx] > minVotes) {
+        for (int bc = 0; bc < accumulator.length; bc++) {
+          if () // Utiliser x,y ou alors r,phi pour la boucle ? plus optimisé de parcourir l'accumulateur mais plus chiant pour chopper les voisins
+            bestCandidates.add(idx);
+        }
+      }
     }
   }
   compare = new HoughComparator(accumulator);
@@ -346,6 +351,13 @@ List<PVector> hough(PImage edgeImg, int nLines) {
   return lines;
 }
 
+double getPhi (int x, int y) {
+   return 2 * Math.atan((double) y / (x + getR(x,y))) + PI;
+}
+
+double getR (int x, int y) {
+   return Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+}
 void drawLines (List<PVector> lines) {
 
   for (int idx = 0; idx < lines.size(); idx++) {

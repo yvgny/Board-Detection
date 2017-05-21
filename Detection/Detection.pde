@@ -88,7 +88,12 @@ void draw() {
   PImage img4 = threshold_binary(scharr(img3), 230);
   image(img4, 800, 0);
   
-  drawLines(graph.findBestQuad(hough(img4, 20), width, height, width * height, 0, false));
+  List<PVector> lines = hough(img4, 20);
+  stroke(204, 102, 0);
+  for(PVector vector : graph.findBestQuad(lines, width, height, width * height, 0, false)) {
+    ellipse(vector.x, vector.y, 3, 3);
+  }
+  drawLines(lines);
 
   //image(blob.findConnectedComponents(img4,true), 800, 600);
 

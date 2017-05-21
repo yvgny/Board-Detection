@@ -17,13 +17,14 @@ PImage hough_test;
 Capture cam;
 HoughComparator compare;
 int neighbours_radius = 5;
+int counter = 0;
 
 void settings() {
   size(1600, 900);
 }
 
 void setup() {
-  // img = loadImage("board1.jpg");
+  img = loadImage("board1.jpg");
   hough_test = loadImage("hough_test.bmp");
   //img_test = loadImage("board1Scharr.bmp");
   thresholdBar1 = new HScrollbar(0, 480, 800, 20);
@@ -35,6 +36,7 @@ void setup() {
   blob = new BlobDetection();
   graph = new QuadGraph();
   //noLoop();
+  /*
   String[] cameras = Capture.list();
   if (cameras.length == 0) {
     println("There are no cameras available for capture.");
@@ -47,13 +49,15 @@ void setup() {
     cam = new Capture(this, 640, 480);
     cam.start();
   }
+  */
 }
 
 void draw() {
-  if (cam.available() == true) {
+  /*if (cam.available() == true) {
     cam.read();
   }
   img = cam.get();
+  */
   image(img, 0, 0);
   thresholdBar1.update();
   thresholdBar2.update();
@@ -87,10 +91,10 @@ void draw() {
 
   PImage img4 = threshold_binary(scharr(img3), 230);
   image(img4, 800, 0);
-  
+
   List<PVector> lines = hough(img4, 20);
   stroke(204, 102, 0);
-  for(PVector vector : graph.findBestQuad(lines, width, height, width * height, 0, false)) {
+  for (PVector vector : graph.findBestQuad(lines, width, height, width * height, 0, false)) {
     ellipse(vector.x, vector.y, 3, 3);
   }
   drawLines(lines);
@@ -327,13 +331,14 @@ List<PVector> hough(PImage edgeImg, int nLines) {
       }
     }
   }
-  
+
   ArrayList<PVector> lines=new ArrayList<PVector>();
+  /*
   for (int bc = 0; bc < accumulator.length; bc++) {
-    if(accumulator[bc] > minVotes) {
+    if (accumulator[bc] > minVotes) {
       boolean best = true;
-      for(int x = -neighbours_radius ; x <= neighbours_radius ; x++) {
-        for(int y = -neighbours_radius ; y <= neighbours_radius ; y++) {
+      for (int x = -neighbours_radius; x <= neighbours_radius; x++) {
+        for (int y = -neighbours_radius; y <= neighbours_radius; y++) {
           int x_clamped = max(0, min(rDim, (bc % rDim) + x));
           int y_clamped = max(0, min(phiDim, (bc / rDim) + x));
           if (y_clamped * rDim + x_clamped != bc && accumulator[y_clamped * rDim + x_clamped] >= accumulator[bc]) {
@@ -341,11 +346,34 @@ List<PVector> hough(PImage edgeImg, int nLines) {
           }
         }
       }
-      if(best) {
+      if (best) {
         bestCandidates.add(bc);
       }
     }
   }
+  */
+  int element;
+  for (int phi = 0; phi < phiDim; phi++) {
+    for (int r = 0; r < rDim; r++) {
+      element = accumulator[phi * rDim + r];
+      if (element > minVotes) {
+        boolean best = true;
+        int x_converted = (int) (r * cos(phi));
+        int y_converted = (int)(r * sin(phi));
+        for (int x = max(0, x_converted - 5); x < min(x_converted + 5, edgeImg.width); x++) {
+          for (int y = max(0, y_converted - 5); y < min(y_converted + 5, edgeImg.height); y++) {
+            if (accumulator[(int)(getPhi(x ,y) / discretizationStepsPhi * rDim + getR(x,y))] > element) {
+                best = false;
+            }
+          }
+        }
+        if (best){
+          bestCandidates.add(phi * rDim + r);
+        }
+      }
+    }
+  }
+
   compare = new HoughComparator(accumulator);
   bestCandidates.sort(compare);
   for (int i = 0; i < min(nLines, bestCandidates.size()); i++) {
@@ -367,11 +395,11 @@ List<PVector> hough(PImage edgeImg, int nLines) {
 }
 
 double getPhi (int x, int y) {
-   return 2 * Math.atan((double) y / (x + getR(x,y))) + PI;
+  return 2 * Math.atan((double) y / (x + getR(x, y))) + PI;
 }
 
 double getR (int x, int y) {
-   return Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
 }
 void drawLines (List<PVector> lines) {
 

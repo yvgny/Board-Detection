@@ -1,4 +1,4 @@
-import processing.video.*; //<>// //<>//
+import processing.video.*; //<>// //<>// //<>// //<>//
 import java.util.function.*;
 
 PImage img;
@@ -11,10 +11,12 @@ HScrollbar thresholdBar5;
 HScrollbar thresholdBar6;
 
 BlobDetection blob;
+QuadGraph graph;
 PImage houghImg;
 PImage hough_test;
 Capture cam;
 HoughComparator compare;
+int neighbours_radius = 5;
 
 void settings() {
   size(1600, 900);
@@ -31,6 +33,7 @@ void setup() {
   thresholdBar5 = new HScrollbar(0, 680, 800, 20);
   thresholdBar6 = new HScrollbar(0, 720, 800, 20);
   blob = new BlobDetection();
+  graph = new QuadGraph();
   //noLoop();
   String[] cameras = Capture.list();
   if (cameras.length == 0) {
@@ -84,9 +87,8 @@ void draw() {
 
   PImage img4 = threshold_binary(scharr(img3), 230);
   image(img4, 800, 0);
-
-  drawLines(hough(img4, 20));
-
+  
+  drawLines(graph.findBestQuad(hough(img4, 20), width, height, width * height, 0, false));
 
   //image(blob.findConnectedComponents(img4,true), 800, 600);
 
@@ -320,14 +322,22 @@ List<PVector> hough(PImage edgeImg, int nLines) {
       }
     }
   }
-  ArrayList<PVector> lines=new ArrayList<PVector>(); 
-  for (int y = 0; y < edgeImg.height; y++) {
-    for (int x = 0; x < edgeImg.width; x++) {
-      if (accumulator[idx] > minVotes) {
-        for (int bc = 0; bc < accumulator.length; bc++) {
-          if () // Utiliser x,y ou alors r,phi pour la boucle ? plus optimisé de parcourir l'accumulateur mais plus chiant pour chopper les voisins
-            bestCandidates.add(idx);
+  
+  ArrayList<PVector> lines=new ArrayList<PVector>();
+  for (int bc = 0; bc < accumulator.length; bc++) {
+    if(accumulator[bc] > minVotes) {
+      boolean best = true;
+      for(int x = -neighbours_radius ; x <= neighbours_radius ; x++) {
+        for(int y = -neighbours_radius ; y <= neighbours_radius ; y++) {
+          int x_clamped = max(0, min(rDim, (bc % rDim) + x));
+          int y_clamped = max(0, min(phiDim, (bc / rDim) + x));
+          if (y_clamped * rDim + x_clamped != bc && accumulator[y_clamped * rDim + x_clamped] >= accumulator[bc]) {
+            best = false;
+          }
         }
+      }
+      if(best) {
+        bestCandidates.add(bc);
       }
     }
   }

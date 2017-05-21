@@ -67,7 +67,7 @@ class BlobDetection {
         index = blobSize[i] > max ? i : index; 
         max = blobSize[i] > max ? blobSize[i] : max;
       }
-      color randomColor = color(random(Byte.MAX_VALUE), random(Byte.MAX_VALUE), random(Byte.MAX_VALUE));
+      color randomColor = color(255);
       for (int pixel = 0; pixel < input.height * input.width; pixel++) {
         output.pixels[pixel] = labels[pixel] == index + 1 ? randomColor : color(0);
       }

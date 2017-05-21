@@ -19,7 +19,7 @@ HoughComparator compare;
 int neighbours_radius = 5;
 int counter = 0;
 
-void settings() {
+void settings(){
   size(1600, 900);
 }
 
@@ -90,13 +90,15 @@ void draw() {
   //image(img3, 0, 600);
 
   PImage img4 = threshold_binary(scharr(img3), 230);
-  image(img4, 800, 0);
+  image(img2, 800, 0);
 
   List<PVector> lines = hough(img4, 20);
   stroke(204, 102, 0);
+  /*
   for (PVector vector : graph.findBestQuad(lines, width, height, width * height, 0, false)) {
     ellipse(vector.x, vector.y, 3, 3);
   }
+  */
   drawLines(lines);
 
   //image(blob.findConnectedComponents(img4,true), 800, 600);
@@ -358,11 +360,9 @@ List<PVector> hough(PImage edgeImg, int nLines) {
       element = accumulator[phi * rDim + r];
       if (element > minVotes) {
         boolean best = true;
-        int x_converted = (int) (r * cos(phi));
-        int y_converted = (int)(r * sin(phi));
-        for (int x = max(0, x_converted - 5); x < min(x_converted + 5, edgeImg.width); x++) {
-          for (int y = max(0, y_converted - 5); y < min(y_converted + 5, edgeImg.height); y++) {
-            if (accumulator[(int)(getPhi(x ,y) / discretizationStepsPhi * rDim + getR(x,y))] > element) {
+        for (int x = max(0, phi - 5); x < min(phi + 5, phiDim); x++) {
+          for (int y = max(0, r - 5); y < min(r + 5, rDim); y++) {
+            if (accumulator[x * rDim + y] > element) {
                 best = false;
             }
           }

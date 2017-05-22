@@ -42,7 +42,7 @@ class BlobDetection {
             labels[x + y *input.width] = foundLabel;
           }
           foundLabel = currentLabel;
-          neighbours.clear();
+          neighbours = new TreeSet<Integer>();
         }
       }
     }

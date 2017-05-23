@@ -33,7 +33,7 @@ PImage scharr(PImage img) {
   for (int y = 2; y < imgHeight - 2; y++) { // Skip top and bottom edges
     for (int x = 2; x < imgWidth - 2; x++) { // Skip left and right
       int val=(int) ((buffer[y * imgWidth + x] / max)*255);
-      result.pixels[y * imgWidth + x]=color(val);
+      result.pixels[y * imgWidth + x]=color(166, val,71);
     }
   }
 

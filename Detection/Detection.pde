@@ -2,24 +2,14 @@ import processing.video.*; //<>//
 import java.util.function.*;
 
 PImage img;
-PImage img_test;
-HScrollbar thresholdBar1;
-HScrollbar thresholdBar2;
-HScrollbar thresholdBar3;
-HScrollbar thresholdBar4;
-HScrollbar thresholdBar5;
-HScrollbar thresholdBar6;
 
 BlobDetection blob;
 QuadGraph graph;
-PImage houghImg;
-PImage hough_test;
-Capture cam;
 HoughComparator compare;
-
 
 float discretizationStepsPhi = 0.06f;
 float discretizationStepsR = 2.5f;
+
 // dimensions of the accumulator
 int phiDim = (int) (Math.PI / discretizationStepsPhi +1);
 
@@ -27,22 +17,30 @@ int phiDim = (int) (Math.PI / discretizationStepsPhi +1);
 float[] tabSin = new float[phiDim];
 float[] tabCos = new float[phiDim];
 
+private static final int hMin = 80;
+private static final int hMax = 135;
+private static final int sMin = 100;
+private static final int sMax = 255;
+private static final int bMin = 0;
+private static final int bMax = 170;
+
+private static final int QUAD_BORDERS_NBR = 4;
+
+private static final double IMAGE_RESIZING_RATIO = 2.0/3;
+
+private static final int tbValue = 230;
+
+private static final String BOARD_TO_LOAD = "board4.jpg";
 
 void settings() {
-  size(1600, 900);
+  img = loadImage(BOARD_TO_LOAD);
+  img.resize((int)(IMAGE_RESIZING_RATIO *img.width), (int)(IMAGE_RESIZING_RATIO *img.height));
+  size(3 *img.width, img.height);
 }
 
 void setup() {
-  img = loadImage("board1.jpg");
-  thresholdBar1 = new HScrollbar(0, 480, 800, 20);
-  thresholdBar2 = new HScrollbar(0, 520, 800, 20);
-  thresholdBar3 = new HScrollbar(0, 580, 800, 20);
-  thresholdBar4 = new HScrollbar(0, 620, 800, 20);
-  thresholdBar5 = new HScrollbar(0, 680, 800, 20);
-  thresholdBar6 = new HScrollbar(0, 720, 800, 20);
   blob = new BlobDetection();
   graph = new QuadGraph();
-  //noLoop();
   float inverseR = 1.f / discretizationStepsR;
   float ang = 0;
   for (int accPhi = 0; accPhi < phiDim; ang += discretizationStepsPhi, accPhi++) {
@@ -50,83 +48,31 @@ void setup() {
     tabSin[accPhi] = (float) (Math.sin(ang) * inverseR);
     tabCos[accPhi] = (float) (Math.cos(ang) * inverseR);
   }
-/*
- String[] cameras = Capture.list();
-  if (cameras.length == 0) {
-    println("There are no cameras available for capture.");
-    exit();
-  } else {
-    println("Available cameras:");
-    for (int i = 0; i < cameras.length; i++) {
-      println(cameras[i]);
-    }
-    cam = new Capture(this, 640, 480);
-    cam.start();
-  }
-  */
 }
 
 void draw() {
-  /*if (cam.available() == true) {
-    cam.read();
-  }
-  img = cam.get();*/
-  //img.resize((int)(1.0/2 * img.width), (int)(1.0/2 * img.height));
-  image(img, 0, 0);
-  thresholdBar1.update();
-  thresholdBar2.update();
-  thresholdBar3.update();
-  thresholdBar4.update();
-  thresholdBar5.update();
-  thresholdBar6.update();
-
   background(color(255));
-  //image(hue(img), 0, 0);
 
-  //PImage img1 = range(img0, (int)map(thresholdBar1.getPos(), 0, 1, 0, 255), (int)map(thresholdBar2.getPos(), 0, 1, 0, 255));
-   //image(img0, 0, 0);
-   
-   
-
-  /*PImage img1 = thresholdHSB(img, (int)map(thresholdBar1.getPos(), 0, 1, 0, 255), (int)map(thresholdBar2.getPos(), 0, 1, 0, 255), 
-   (int)map(thresholdBar3.getPos(), 0, 1, 0, 255), (int)map(thresholdBar4.getPos(), 0, 1, 0, 255), 
-   (int)map(thresholdBar5.getPos(), 0, 1, 0, 255), (int)map(thresholdBar6.getPos(), 0, 1, 0, 255));
-   */
-  PImage img1 = thresholdHSB(img, 80, 135, 100, 255, 0, 170);
-
+  PImage img1 = thresholdHSB(img, hMin, hMax, sMin, sMax, bMin, bMax);
   PImage img2 = blob.findConnectedComponents(img1, true);
   PImage img3 = gaussian_kernel(img2);
+  PImage img4 = scharr(img3);
+
+  List<PVector> lines = hough(threshold_binary(img4, tbValue), QUAD_BORDERS_NBR);
 
 
-  //image(img2, 800, 0);
-
-
-  //image(img3, 0, 600);
-
-  PImage img4 = threshold_binary(scharr(img3), 230);
-    image(img, 0, 0);
-  image(img4, 800, 0);
-
-  List<PVector> lines = hough(img4, 4);
-
-  stroke(204, 102, 0);
+  image(img, 0, 0);
+  image(img2, img.width, 0);
+  image(img4, 2.0 *img.width, 0);
 
   drawLines(lines);
 
   stroke(244, 249, 102);
   fill(192, 9, 161);
-  
-  for (PVector vector : graph.findBestQuad(lines, img.width, img.height, img.width * img.height , (int)((1.0/5 * 1.0/4) * img.height * img.height), false)) {
+
+  for (PVector vector : graph.findBestQuad(lines, img.width, img.height, img.width * img.height, (int)((1.0/5 * 1.0/4) * img.height * img.height), false)) {
     ellipse(vector.x, vector.y, 10, 10);
   }
-
-  thresholdBar1.display();
-  thresholdBar2.display();
-
-  thresholdBar3.display();
-  thresholdBar4.display();
-  thresholdBar5.display();
-  thresholdBar6.display();
 }
 
 boolean imagesEqual(PImage img1, PImage img2) {

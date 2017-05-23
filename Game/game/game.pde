@@ -31,6 +31,8 @@ float currentTime;
 float bufferScore;
 float SCORE_UPDATE_PERIOD = 1000;
 HScrollbar scrollbar;
+PShape snowman;
+
 
 void settings() {
   size(WINDOW_WIDTH, WINDOW_HEIGHT, P3D);
@@ -53,6 +55,8 @@ void setup() {
   score = new ArrayList();
   score.add(0.0);
   bufferScore = 0;
+  snowman = loadShape("snowman.obj");
+  snowman.scale(1.7);
   noStroke();
 }
 

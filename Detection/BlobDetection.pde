@@ -51,7 +51,7 @@ class BlobDetection {
     // if onlyBiggest==true, count the number of pixels for each label
     int[] blobSize = new int[labelsEquivalences.size()];
     for (int index = 0; index < input.height * input.width; index++) {
-      if(labels[index] != 0) {
+      if (labels[index] != 0) {
         int i = labelsEquivalences.get(labels[index] - 1).first();
         blobSize[i - 1]++;
         labels[index] = i;
@@ -63,13 +63,12 @@ class BlobDetection {
     if (onlyBiggest) {
       int max = 0;
       int index = 0;
-      for (int i = 0 ; i < blobSize.length ; i++) {
+      for (int i = 0; i < blobSize.length; i++) {
         index = blobSize[i] > max ? i : index; 
         max = blobSize[i] > max ? blobSize[i] : max;
       }
-      color randomColor = color(255);
       for (int pixel = 0; pixel < input.height * input.width; pixel++) {
-        output.pixels[pixel] = labels[pixel] == index + 1 ? randomColor : color(0);
+        output.pixels[pixel] = labels[pixel] == index + 1 ? color(76, 229, 58) : color(0);
       }
     } else {
       color[] colors = new color[labelsEquivalences.size()];

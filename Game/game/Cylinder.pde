@@ -53,10 +53,15 @@ class Cylinder {
     rotateX(rotateX);
     rotateY(rotateY);
     rotateZ(rotateZ);
+    /*
     shape(openCylinder);
     shape(cover);
     translate(0, 0, cylinderHeight);
     shape(cover);
+    */
+    rotateX(PI/2);
+    rotateY(PI/2);
+    shape(snowman);
     popMatrix();
   }
 

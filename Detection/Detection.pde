@@ -17,14 +17,23 @@ PImage hough_test;
 Capture cam;
 HoughComparator compare;
 
+
+float discretizationStepsPhi = 0.06f;
+float discretizationStepsR = 2.5f;
+// dimensions of the accumulator
+int phiDim = (int) (Math.PI / discretizationStepsPhi +1);
+
+// pre-compute the sin and cos values
+float[] tabSin = new float[phiDim];
+float[] tabCos = new float[phiDim];
+
+
 void settings() {
   size(1600, 900);
 }
 
 void setup() {
   img = loadImage("board1.jpg");
-  hough_test = loadImage("hough_test.bmp");
-  //img_test = loadImage("board1Scharr.bmp");
   thresholdBar1 = new HScrollbar(0, 480, 800, 20);
   thresholdBar2 = new HScrollbar(0, 520, 800, 20);
   thresholdBar3 = new HScrollbar(0, 580, 800, 20);
@@ -34,28 +43,35 @@ void setup() {
   blob = new BlobDetection();
   graph = new QuadGraph();
   //noLoop();
-  /*
-  String[] cameras = Capture.list();
-   if (cameras.length == 0) {
-   println("There are no cameras available for capture.");
-   exit();
-   } else {
-   println("Available cameras:");
-   for (int i = 0; i < cameras.length; i++) {
-   println(cameras[i]);
-   }
-   cam = new Capture(this, 640, 480);
-   cam.start();
-   }
-   */
+  float inverseR = 1.f / discretizationStepsR;
+  float ang = 0;
+  for (int accPhi = 0; accPhi < phiDim; ang += discretizationStepsPhi, accPhi++) {
+    // we can also pre-multiply by (1/discretizationStepsR) since we need it in the Hough loop
+    tabSin[accPhi] = (float) (Math.sin(ang) * inverseR);
+    tabCos[accPhi] = (float) (Math.cos(ang) * inverseR);
+  }
+/*
+ String[] cameras = Capture.list();
+  if (cameras.length == 0) {
+    println("There are no cameras available for capture.");
+    exit();
+  } else {
+    println("Available cameras:");
+    for (int i = 0; i < cameras.length; i++) {
+      println(cameras[i]);
+    }
+    cam = new Capture(this, 640, 480);
+    cam.start();
+  }
+  */
 }
 
 void draw() {
   /*if (cam.available() == true) {
-   cam.read();
-   }
-   img = cam.get();
-   */
+    cam.read();
+  }
+  img = cam.get();*/
+  //img.resize((int)(1.0/2 * img.width), (int)(1.0/2 * img.height));
   image(img, 0, 0);
   thresholdBar1.update();
   thresholdBar2.update();
@@ -67,17 +83,16 @@ void draw() {
   background(color(255));
   //image(hue(img), 0, 0);
 
-  /*PImage img1 = range(img0, (int)map(thresholdBar1.getPos(), 0, 1, 0, 255), (int)map(thresholdBar2.getPos(), 0, 1, 0, 255));
-   image(img0, 0, 0);
+  //PImage img1 = range(img0, (int)map(thresholdBar1.getPos(), 0, 1, 0, 255), (int)map(thresholdBar2.getPos(), 0, 1, 0, 255));
+   //image(img0, 0, 0);
    
-   */
+   
 
- /* PImage img1 = thresholdHSB(img, (int)map(thresholdBar1.getPos(), 0, 1, 0, 255), (int)map(thresholdBar2.getPos(), 0, 1, 0, 255), 
-    (int)map(thresholdBar3.getPos(), 0, 1, 0, 255), (int)map(thresholdBar4.getPos(), 0, 1, 0, 255), 
-    (int)map(thresholdBar5.getPos(), 0, 1, 0, 255), (int)map(thresholdBar6.getPos(), 0, 1, 0, 255));
-*/
-  PImage img1 = thresholdHSB(img, 80, 140, 100, 255, 0, 255);
-  image(img, 0, 0);
+  /*PImage img1 = thresholdHSB(img, (int)map(thresholdBar1.getPos(), 0, 1, 0, 255), (int)map(thresholdBar2.getPos(), 0, 1, 0, 255), 
+   (int)map(thresholdBar3.getPos(), 0, 1, 0, 255), (int)map(thresholdBar4.getPos(), 0, 1, 0, 255), 
+   (int)map(thresholdBar5.getPos(), 0, 1, 0, 255), (int)map(thresholdBar6.getPos(), 0, 1, 0, 255));
+   */
+  PImage img1 = thresholdHSB(img, 80, 135, 100, 255, 0, 170);
 
   PImage img2 = blob.findConnectedComponents(img1, true);
   PImage img3 = gaussian_kernel(img2);
@@ -89,20 +104,21 @@ void draw() {
   //image(img3, 0, 600);
 
   PImage img4 = threshold_binary(scharr(img3), 230);
+    image(img, 0, 0);
   image(img4, 800, 0);
 
   List<PVector> lines = hough(img4, 4);
-  
+
   stroke(204, 102, 0);
 
   drawLines(lines);
 
-  for (PVector vector : graph.findBestQuad(lines, width, height, width * height,(int) ((1.0/5) * width * (1.0/5) * height), false)) {
-    ellipse(vector.x, vector.y, 6, 6);
+  stroke(244, 249, 102);
+  fill(192, 9, 161);
+  
+  for (PVector vector : graph.findBestQuad(lines, img.width, img.height, img.width * img.height , (int)((1.0/5 * 1.0/4) * img.height * img.height), false)) {
+    ellipse(vector.x, vector.y, 10, 10);
   }
-
-
-  //image(blob.findConnectedComponents(img4,true), 800, 600);
 
   thresholdBar1.display();
   thresholdBar2.display();

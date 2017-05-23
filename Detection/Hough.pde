@@ -2,12 +2,8 @@ int MAXIMA_RADIUS = 10;
 
 List<PVector> hough(PImage edgeImg, int nLines) {
   ArrayList<Integer> bestCandidates = new ArrayList<Integer> ();
-  float discretizationStepsPhi = 0.06f;
-  float discretizationStepsR = 2.5f;
-  int minVotes=20;
+  int minVotes=30;
 
-  // dimensions of the accumulator
-  int phiDim = (int) (Math.PI / discretizationStepsPhi +1);
 
   //The max radius is the image diagonal, but it can be also negative 
   int rDim = (int) ((sqrt(edgeImg.width*edgeImg.width + edgeImg.height*edgeImg.height) * 2) / discretizationStepsR +1); 
@@ -24,8 +20,7 @@ List<PVector> hough(PImage edgeImg, int nLines) {
       if (brightness(edgeImg.pixels[y * edgeImg.width + x]) != 0) {
         float r;
         for (int phi = 0; phi < phiDim; phi++) {
-          r = x * cos(phi * discretizationStepsPhi) + y * sin(phi * discretizationStepsPhi);
-          r = (r / discretizationStepsR);
+          r = x * tabCos[phi] + y * tabSin[phi];
           r += rDim / 2;
           accumulator[(int)(phi * rDim + r)] += 1;
         }
@@ -48,6 +43,7 @@ List<PVector> hough(PImage edgeImg, int nLines) {
           }
         }
         if (best) {
+          accumulator[phi * rDim + r] += 1;
           bestCandidates.add(phi * rDim + r);
         }
       }
@@ -64,12 +60,13 @@ List<PVector> hough(PImage edgeImg, int nLines) {
     float phi = accPhi * discretizationStepsPhi;
     lines.add(new PVector(r, phi));
   }
-  houghImg = createImage(rDim, phiDim, ALPHA);
+  print("Original size = " + bestCandidates.size() + ", new size = " + lines.size() + ", nbr of deleted = " + (bestCandidates.size()  - lines.size()) + ".\n");
+  /*houghImg = createImage(rDim, phiDim, ALPHA);
   for (int i = 0; i < accumulator.length; i++) {
     houghImg.pixels[i] = color(min(255, accumulator[i]));
   }
   // You may want to resize the accumulator to make it easier to see:
   houghImg.resize(400, 400);
-  houghImg.updatePixels();
+  houghImg.updatePixels();*/
   return lines;
 }

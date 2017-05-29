@@ -39,12 +39,15 @@ class TwoDThreeD {
 
 
   public TwoDThreeD(int width, int height, int sampleRate) {
+    
+    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
     // set the offset to the center of the webcam image
     K[0][2] = 0.5f * width;
     K[1][2] = 0.5f * height;
     //compute inverse of K
     Mat opencv_K= new Mat(3, 3, CvType.CV_32F);
+    
     opencv_K.put(0, 0, K[0][0]);
     opencv_K.put(0, 1, K[0][1]);
     opencv_K.put(0, 2, K[0][2]);

@@ -33,13 +33,13 @@ private static final double IMAGE_RESIZING_RATIO = 2.0/3;
 
 private static final int tbValue = 230;
 
-private static final String BOARD_TO_LOAD = "board4.jpg";
+private static final String BOARD_TO_LOAD = "board2.jpg";
 
 void settings() {
   img = loadImage(BOARD_TO_LOAD);
-  rotations = new TwoDThreeD(img.width, img.height, 0);
   img.resize((int)(IMAGE_RESIZING_RATIO *img.width), (int)(IMAGE_RESIZING_RATIO *img.height));
   size(3 *img.width, img.height);
+  rotations = new TwoDThreeD(img.width, img.height, 0);
 }
 
 void setup() {
@@ -76,9 +76,13 @@ void draw() {
 
   List<PVector> bestQuads = graph.findBestQuad(lines, img.width, img.height, img.width * img.height, (int)((1.0/5 * 1.0/4) * img.height * img.height), false);
 
+
+  for (PVector vector : bestQuads) {
+    vector.z = 1;
+  }
   PVector rotation = rotations.get3DRotations(bestQuads);
-  println("r_x = " + rotation.x + " r_y = " + rotation.y + " r_z " + rotation.z + ".");
-  
+  println("r_x = " + Math.toDegrees(rotation.x) + " r_y = " + Math.toDegrees(rotation.y) + " r_z = " + Math.toDegrees(rotation.z) + ".");
+
   for (PVector vector : bestQuads) {
     ellipse(vector.x, vector.y, 10, 10);
   }

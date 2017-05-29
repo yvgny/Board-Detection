@@ -60,7 +60,6 @@ List<PVector> hough(PImage edgeImg, int nLines) {
     float phi = accPhi * discretizationStepsPhi;
     lines.add(new PVector(r, phi));
   }
-  print("Original size = " + bestCandidates.size() + ", new size = " + lines.size() + ", nbr of deleted = " + (bestCandidates.size()  - lines.size()) + ".\n");
   /*houghImg = createImage(rDim, phiDim, ALPHA);
   for (int i = 0; i < accumulator.length; i++) {
     houghImg.pixels[i] = color(min(255, accumulator[i]));

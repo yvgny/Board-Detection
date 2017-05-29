@@ -1,11 +1,14 @@
-import processing.video.*; //<>//
+import processing.video.*; //<>// //<>//
 import java.util.function.*;
+import gab.opencv.*;
 
+OpenCV opencv;
 PImage img;
 
 BlobDetection blob;
 QuadGraph graph;
 HoughComparator compare;
+TwoDThreeD rotations;
 
 float discretizationStepsPhi = 0.06f;
 float discretizationStepsR = 2.5f;
@@ -34,11 +37,13 @@ private static final String BOARD_TO_LOAD = "board4.jpg";
 
 void settings() {
   img = loadImage(BOARD_TO_LOAD);
+  rotations = new TwoDThreeD(img.width, img.height, 0);
   img.resize((int)(IMAGE_RESIZING_RATIO *img.width), (int)(IMAGE_RESIZING_RATIO *img.height));
   size(3 *img.width, img.height);
 }
 
 void setup() {
+  opencv = new OpenCV(this, 100, 100);
   blob = new BlobDetection();
   graph = new QuadGraph();
   float inverseR = 1.f / discretizationStepsR;
@@ -60,7 +65,6 @@ void draw() {
 
   List<PVector> lines = hough(threshold_binary(img4, tbValue), QUAD_BORDERS_NBR);
 
-
   image(img, 0, 0);
   image(img2, img.width, 0);
   image(img4, 2.0 *img.width, 0);
@@ -70,7 +74,12 @@ void draw() {
   stroke(244, 249, 102);
   fill(192, 9, 161);
 
-  for (PVector vector : graph.findBestQuad(lines, img.width, img.height, img.width * img.height, (int)((1.0/5 * 1.0/4) * img.height * img.height), false)) {
+  List<PVector> bestQuads = graph.findBestQuad(lines, img.width, img.height, img.width * img.height, (int)((1.0/5 * 1.0/4) * img.height * img.height), false);
+
+  PVector rotation = rotations.get3DRotations(bestQuads);
+  println("r_x = " + rotation.x + " r_y = " + rotation.y + " r_z " + rotation.z + ".");
+  
+  for (PVector vector : bestQuads) {
     ellipse(vector.x, vector.y, 10, 10);
   }
 }

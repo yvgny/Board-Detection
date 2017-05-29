@@ -33,12 +33,12 @@ class ImageProcessing extends PApplet {
   Capture cam;
 
 
-  private static final int hMin = 80;
-  private static final int hMax = 135;
-  private static final int sMin = 100;
-  private static final int sMax = 255;
-  private static final int bMin = 0;
-  private static final int bMax = 170;
+  /*private static final int hMin = 80;
+   private static final int hMax = 135;
+   private static final int sMin = 100;
+   private static final int sMax = 255;
+   private static final int bMin = 0;
+   private static final int bMax = 170;*/
 
 
   private static final int QUAD_BORDERS_NBR = 4;
@@ -89,27 +89,29 @@ class ImageProcessing extends PApplet {
     img = cam.get();
     img.loadPixels();
 
-    bar1.update();
-    bar2.update();
-    bar3.update();
-    bar4.update();
-    bar5.update();
-    bar6.update();
+    bar1.update(imgProcessing);
+    bar2.update(imgProcessing);
+    bar3.update(imgProcessing);
+    bar4.update(imgProcessing);
+    bar5.update(imgProcessing);
+    bar6.update(imgProcessing);
 
-    /*int hMin = (int)map(bar1.getPos(), 0, 1, 0, 255);
-     int hMax = (int)map(bar2.getPos(), 0, 1, 0, 255);
-     int sMin = (int)map(bar3.getPos(), 0, 1, 0, 255);
-     int sMax = (int)map(bar4.getPos(), 0, 1, 0, 255);
-     int bMin = (int)map(bar5.getPos(), 0, 1, 0, 255);
-     int bMax = (int)map(bar6.getPos(), 0, 1, 0, 255);*/
+    int hMin = (int)map(bar1.getPos(), 0, 1, 0, 255);
+    int hMax = (int)map(bar2.getPos(), 0, 1, 0, 255);
+    int sMin = (int)map(bar3.getPos(), 0, 1, 0, 255);
+    int sMax = (int)map(bar4.getPos(), 0, 1, 0, 255);
+    int bMin = (int)map(bar5.getPos(), 0, 1, 0, 255);
+    int bMax = (int)map(bar6.getPos(), 0, 1, 0, 255);
 
     background(color(255));
 
     PImage img1 = thresholdHSB(img, hMin, hMax, sMin, sMax, bMin, bMax);
     img1.loadPixels();
 
-    //PImage img2 = blob.findConnectedComponents(img1, true);
-    PImage img3 = gaussian_kernel(img1);
+    PImage img2 = blob.findConnectedComponents(img1, true);
+    img2.loadPixels();
+
+    PImage img3 = gaussian_kernel(img2);
     img3.loadPixels();
 
     PImage img4 = scharr(img3);
@@ -152,12 +154,12 @@ class ImageProcessing extends PApplet {
       }
     }
 
-    bar1.display();
-    bar2.display();
-    bar3.display();
-    bar4.display();
-    bar5.display();
-    bar6.display();
+    bar1.display(imgProcessing);
+    bar2.display(imgProcessing);
+    bar3.display(imgProcessing);
+    bar4.display(imgProcessing);
+    bar5.display(imgProcessing);
+    bar6.display(imgProcessing);
   }
 
   boolean imagesEqual(PImage img1, PImage img2) {

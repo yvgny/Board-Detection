@@ -53,6 +53,26 @@ class HScrollbar {
       sliderPosition = sliderPosition + (newSliderPosition - sliderPosition);
     }
   }
+  
+  void update(PApplet app) {
+    if (isMouseOver(app)) {
+      mouseOver = true;
+    } else {
+      mouseOver = false;
+    }
+    if (app.mousePressed && mouseOver) {
+      locked = true;
+    }
+    if (!app.mousePressed) {
+      locked = false;
+    }
+    if (locked) {
+      newSliderPosition = constrain(app.mouseX - barHeight/2, sliderPositionMin, sliderPositionMax);
+    }
+    if (abs(newSliderPosition - sliderPosition) > 1) {
+      sliderPosition = sliderPosition + (newSliderPosition - sliderPosition);
+    }
+  }
 
   /**
    * @brief Clamps the value into the interval
@@ -80,6 +100,15 @@ class HScrollbar {
       return false;
     }
   }
+  
+  boolean isMouseOver(PApplet app) {
+    if (app.mouseX > xPosition && app.mouseX < xPosition+barWidth &&
+      app.mouseY > yPosition && app.mouseY < yPosition+barHeight) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   /**
    * @brief Draws the scrollbar in its current state
@@ -94,6 +123,19 @@ class HScrollbar {
       fill(102, 102, 102);
     }
     rect(sliderPosition, yPosition, barHeight, barHeight);
+  }
+  
+  
+  void display(PApplet app) {
+    app.noStroke();
+    app.fill(204);
+    app.rect(xPosition, yPosition, barWidth, barHeight);
+    if (mouseOver || locked) {
+      app.fill(0, 0, 0);
+    } else {
+      app.fill(102, 102, 102);
+    }
+    app.rect(sliderPosition, yPosition, barHeight, barHeight);
   }
 
   /**

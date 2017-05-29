@@ -77,12 +77,12 @@ class Ball {
   }
 
   void render(float rotX, float rotZ) {
-    pushMatrix();
+    my_game.pushMatrix();
     update(rotX, rotZ);
     checkEdges();
     checkCylinderCollisions();
     display();
-    popMatrix();
+    my_game.popMatrix();
   }
 
   float getVelocity() {

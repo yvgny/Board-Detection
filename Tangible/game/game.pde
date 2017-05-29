@@ -79,7 +79,7 @@ class Game extends PApplet {
       //Ball
       pushMatrix();
       centerAxis();
-      translate(ball.location.x, ball.location.z, -ball.location.y); 
+      my_game.translate(ball.location.x, ball.location.z, -ball.location.y); 
       stroke(0);
       sphere(ball.size);
       popMatrix();
@@ -91,12 +91,12 @@ class Game extends PApplet {
         cylinder.cover.setStroke(color(100, 40, 40));
       }
 
-      cylinder.draw(mouseX, mouseY, BOX_HEIGHT / 2);
+      cylinder.draw(mouseX, mouseY, BOX_HEIGHT / 2, my_game);
       cylinder.openCylinder.setStroke(color(0));
       cylinder.cover.setStroke(color(0));
 
       for (PVector position : cylinders) {
-        cylinder.draw(position.x + width/2, position.y + width/2, BOX_HEIGHT / 2);
+        cylinder.draw(position.x + width/2, position.y + width/2, BOX_HEIGHT / 2, my_game);
       }
     } else {
       clearScoreBuffer();
@@ -106,8 +106,8 @@ class Game extends PApplet {
       image(bar_topView, SCORE_BAR_BORDER / 2, height - SCORE_BAR_HEIGHT + SCORE_BAR_BORDER / 2);
       image(bar_scoreBoard, SCORE_BAR_BORDER + bar_topView.width, height - SCORE_BAR_HEIGHT + SCORE_BAR_BORDER / 2);
       image(bar_scoreChart, 3.0 / 2.0 * SCORE_BAR_BORDER + bar_topView.width + bar_scoreBoard.width, height - SCORE_BAR_HEIGHT + SCORE_BAR_BORDER / 2);
-      scrollbar.update();
-      scrollbar.display();
+      scrollbar.update(my_game);
+      scrollbar.display(my_game);
 
       fill(255);
       noStroke();
@@ -124,7 +124,7 @@ class Game extends PApplet {
 
       cylinder.rotate(PI/2, 0, 0);
       for (PVector position : cylinders) {
-        cylinder.draw(position.x, -BOX_HEIGHT / 2, position.y);
+        cylinder.draw(position.x, -BOX_HEIGHT / 2, position.y, my_game);
       }
 
 

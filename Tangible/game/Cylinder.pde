@@ -64,6 +64,24 @@ class Cylinder {
     shape(snowman);
     popMatrix();
   }
+  
+  void draw (float x, float y, float z, PApplet app) {
+    app.pushMatrix();
+    app.translate(x, y, z);
+    app.rotateX(rotateX);
+    app.rotateY(rotateY);
+    app.rotateZ(rotateZ);
+    /*
+    shape(openCylinder);
+    shape(cover);
+    translate(0, 0, cylinderHeight);
+    shape(cover);
+    */
+    app.rotateX(PI/2);
+    app.rotateY(PI/2);
+    app.shape(snowman);
+    app.popMatrix();
+  }
 
   void rotate(float rotateX, float rotateY, float rotateZ) {
     this.rotateX = rotateX;

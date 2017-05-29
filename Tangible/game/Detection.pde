@@ -1,4 +1,4 @@
-import processing.video.*; //<>// //<>//
+import processing.video.*; //<>// //<>// //<>//
 import java.util.function.*;
 import gab.opencv.*;
 
@@ -39,6 +39,13 @@ class ImageProcessing extends PApplet {
    private static final int sMax = 255;
    private static final int bMin = 0;
    private static final int bMax = 170;*/
+
+  /*private static final int hMin = 100;
+   private static final int hMax = 180;
+   private static final int sMin = 50;
+   private static final int sMax = 255;
+   private static final int bMin = 0;
+   private static final int bMax = 255;*/
 
 
   private static final int QUAD_BORDERS_NBR = 4;
@@ -139,14 +146,15 @@ class ImageProcessing extends PApplet {
       PVector rotation = rotations.get3DRotations(bestQuads);
       println(rotation);
       float degree_rotation = (float)Math.toDegrees(rotation.x);
-      if (degree_rotation > 90) {
-        xRotation = rotation.x - PI;
-      } else if (degree_rotation < -90) {
-        xRotation = rotation.x + PI;
-      } else {
-        xRotation = rotation.x;
-      }
-      yRotation = rotation.y;
+      if (degree_rotation > 300) {
+       xRotation = rotation.x - 2*PI;
+       } else if (degree_rotation < -300) {
+       xRotation = rotation.x + 2*PI;
+       } else {
+       xRotation = rotation.x - PI;
+       }
+      //xRotation = my_game.clamp(rotation.x, -PI/3.0, PI/3.0);
+      yRotation = my_game.clamp(rotation.y, -PI/3.0, PI/3.0);
 
 
       for (PVector vector : bestQuads) {

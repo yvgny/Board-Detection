@@ -11,11 +11,11 @@ float SCORE_BOARD_RECT_HEIGHT = 10;
 int WINDOW_HEIGHT = 1000;
 int WINDOW_WIDTH = 1000;
 int BOX_HEIGHT = 15;
-int BOX_LENGTH = 400;
+int BOX_LENGTH = 600;
 int BOX_WIDTH = BOX_LENGTH;
-int BALL_SIZE = 12;
-int CYLINDER_BASESIZE = 25;
-int CYLINDER_HEIGHT = 50;
+int BALL_SIZE = 10;
+int CYLINDER_BASESIZE = 20;
+int CYLINDER_HEIGHT = 40;
 int SCORE_BAR_HEIGHT =  (int) (WINDOW_HEIGHT / 5.0);
 int SCORE_BAR_BORDER = 16;
 boolean SHIFTpressed = false;
@@ -126,9 +126,8 @@ class Game extends PApplet {
       for (PVector position : cylinders) {
         cylinder.draw(position.x, -BOX_HEIGHT / 2, position.y, my_game);
       }
-
-
-      ball.render(imgProcessing.yRotation, -imgProcessing.xRotation);
+      
+      ball.render(imgProcessing.xRotation, -imgProcessing.yRotation);
     }
   }
 

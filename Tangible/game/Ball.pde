@@ -64,10 +64,12 @@ class Ball {
   }
 
   void checkCylinderCollisions() {
-    for (PVector cylPos : cylinders) {
+    for (int i = 0; i < cylinders.size(); i++) {
+      PVector cylPos = cylinders.get(i);
       PVector adjustedCylPos = new PVector(cylPos.x, location.y, cylPos.y);
       float distance = location.dist(adjustedCylPos);
       if (distance <= CYLINDER_BASESIZE + BALL_SIZE) {
+        cylinders.remove(i--);
         addScore(getVelocity());
         PVector normal = location.copy().sub(adjustedCylPos).normalize();
         velocity.sub(normal.copy().mult(2 * velocity.dot(normal)));

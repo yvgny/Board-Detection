@@ -117,7 +117,7 @@ class Game extends PApplet {
       centerAxis();
 
       rotateZ(imgProcessing.yRotation);
-      rotateX(imgProcessing.xRotation);
+      rotateX(-imgProcessing.xRotation);
 
 
       box(BOX_LENGTH, BOX_HEIGHT, BOX_WIDTH);
@@ -127,7 +127,7 @@ class Game extends PApplet {
         cylinder.draw(position.x, -BOX_HEIGHT / 2, position.y, my_game);
       }
       
-      ball.render(-imgProcessing.xRotation, imgProcessing.yRotation);
+      ball.render(imgProcessing.xRotation, imgProcessing.yRotation);
     }
   }
 
@@ -144,7 +144,7 @@ class Game extends PApplet {
     for (PVector cylinder : cylinders) {
       float posX = map(cylinder.x, -BOX_LENGTH / 2, BOX_LENGTH / 2, - bar_topView.width / 2, bar_topView.width/2);
       float posY = map(cylinder.y, -BOX_WIDTH / 2, BOX_WIDTH / 2, - bar_topView.height / 2, bar_topView.height/2);
-      float radius = 23;
+      float radius = 10;
       bar_topView.ellipse(posX, posY, radius, radius);
     }
     float ballX = map(ball.location.x, -BOX_LENGTH / 2, BOX_LENGTH / 2, - bar_topView.width / 2, bar_topView.width/2);

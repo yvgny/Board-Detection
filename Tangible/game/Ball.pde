@@ -11,7 +11,7 @@ class Ball {
     friction = new PVector(0, 0, 0);
     gravityConstant = 0.12;
     normalForce = 1;  
-    mu = 0.03;
+    mu = 0.02;
     maxX = xBoundary;
     minX = -maxX;
     maxZ = zBoundary;

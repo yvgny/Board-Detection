@@ -74,7 +74,7 @@ class ImageProcessing extends PApplet {
     cam = new Capture(this, 640, 480);
     cam.start();
 
-    rotations = new TwoDThreeD(width, height, 1);
+    rotations = new TwoDThreeD(width, height, 12);
 
     /*img.resize((int)(IMAGE_RESIZING_RATIO *img.width), (int)(IMAGE_RESIZING_RATIO *img.height));
      size(3 *img.width, img.height);*/
@@ -144,7 +144,6 @@ class ImageProcessing extends PApplet {
     }
     if (!bestQuads.isEmpty()) {
       PVector rotation = rotations.get3DRotations(bestQuads);
-      println(rotation);
       float degree_rotation = (float)Math.toDegrees(rotation.x);
       if (degree_rotation > 300) {
        xRotation = rotation.x - 2*PI;
@@ -153,9 +152,9 @@ class ImageProcessing extends PApplet {
        } else {
        xRotation = rotation.x - PI;
        }
-      //xRotation = my_game.clamp(rotation.x, -PI/3.0, PI/3.0);
+      xRotation = my_game.clamp(xRotation, -PI/3.0, PI/3.0);
       yRotation = my_game.clamp(rotation.y, -PI/3.0, PI/3.0);
-
+      //yRotation = rotation.y;
 
       for (PVector vector : bestQuads) {
         ellipse(vector.x, vector.y, 10, 10);

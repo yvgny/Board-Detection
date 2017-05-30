@@ -78,8 +78,8 @@ class TwoDThreeD {
 
     this.sampleRate=sampleRate;
     if (sampleRate>0) {
-      cutOffFreq=sampleRate/2;
-      alpha= (1/sampleRate)/(1/sampleRate + 1/cutOffFreq);
+      cutOffFreq=sampleRate/2.0;
+      alpha= (1.0/sampleRate)/(1.0/sampleRate + 1.0/cutOffFreq);
     }
   }
 

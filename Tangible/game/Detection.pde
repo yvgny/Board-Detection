@@ -20,12 +20,12 @@ HoughComparator compare;
 class ImageProcessing extends PApplet {
   OpenCV opencv;
   PImage img;
-  HScrollbar bar1 = new HScrollbar(0, 0, 640, 20);
-  HScrollbar bar2 = new HScrollbar(0, 20, 640, 20);
-  HScrollbar bar3 = new HScrollbar(0, 40, 640, 20);
-  HScrollbar bar4 = new HScrollbar(0, 60, 640, 20);
-  HScrollbar bar5 = new HScrollbar(0, 80, 640, 20);
-  HScrollbar bar6 = new HScrollbar(0, 100, 640, 20);
+  HScrollbar bar1 = new HScrollbar(0, 480, 640, 20);
+  HScrollbar bar2 = new HScrollbar(0, 500, 640, 20);
+  HScrollbar bar3 = new HScrollbar(0, 520, 640, 20);
+  HScrollbar bar4 = new HScrollbar(0, 540, 640, 20);
+  HScrollbar bar5 = new HScrollbar(0, 560, 640, 20);
+  HScrollbar bar6 = new HScrollbar(0, 580, 640, 20);
   BlobDetection blob;
   QuadGraph graph;
   TwoDThreeD rotations;
@@ -61,7 +61,7 @@ class ImageProcessing extends PApplet {
 
 
   void settings() {
-    size(640, 480);
+    size(640, 600);
     //img = loadImage(BOARD_TO_LOAD);
     //img.resize(640,480);
   }
@@ -74,7 +74,7 @@ class ImageProcessing extends PApplet {
     cam = new Capture(this, 640, 480);
     cam.start();
 
-    rotations = new TwoDThreeD(width, height, 0);
+    rotations = new TwoDThreeD(width, height, 1);
 
     /*img.resize((int)(IMAGE_RESIZING_RATIO *img.width), (int)(IMAGE_RESIZING_RATIO *img.height));
      size(3 *img.width, img.height);*/

@@ -116,8 +116,8 @@ class Game extends PApplet {
 
       centerAxis();
 
-      rotateZ(-imgProcessing.yRotation);
-      rotateX(-imgProcessing.xRotation);
+      rotateZ(imgProcessing.yRotation);
+      rotateX(imgProcessing.xRotation);
 
 
       box(BOX_LENGTH, BOX_HEIGHT, BOX_WIDTH);
@@ -127,7 +127,7 @@ class Game extends PApplet {
         cylinder.draw(position.x, -BOX_HEIGHT / 2, position.y, my_game);
       }
       
-      ball.render(imgProcessing.xRotation, -imgProcessing.yRotation);
+      ball.render(-imgProcessing.xRotation, imgProcessing.yRotation);
     }
   }
 

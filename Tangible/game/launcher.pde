@@ -13,4 +13,6 @@ void setup() {
   String []args = {"Image processing window"};
   PApplet.runSketch(args, imgProcessing);
   PApplet.runSketch(args, my_game);
+  imgProcessing.getSurface().setVisible(false);
+  this.getSurface().setVisible(false);
 }

@@ -2,7 +2,7 @@ int MAXIMA_RADIUS = 30;
 
 List<PVector> hough(PImage edgeImg, int nLines) {
   ArrayList<Integer> bestCandidates = new ArrayList<Integer> ();
-  int minVotes=25;
+  int minVotes=20;
 
 
   //The max radius is the image diagonal, but it can be also negative 

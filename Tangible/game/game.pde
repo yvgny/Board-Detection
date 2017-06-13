@@ -3,6 +3,7 @@ import java.math.BigDecimal;
 
 float ry;
 float rx;
+PImage img;
 float speed = 1;
 float SCROLLBAR_WIDTH;
 float SCROLLBAR_HEIGHT = 20;
@@ -63,7 +64,10 @@ class Game extends PApplet {
 
   void draw() {
     background(255);
-
+    float ratio = (1.0/5.0 * WINDOW_WIDTH) / img.width;
+    PImage imgResized = img.copy();
+    imgResized.resize((int)(1.0/5.0 * WINDOW_WIDTH), (int)( ratio * img.height));
+    image(imgResized, 0, 0);
     if (SHIFTpressed) {
       cylinder = new Cylinder(CYLINDER_BASESIZE, CYLINDER_HEIGHT, true);
       stroke(230);
@@ -115,7 +119,7 @@ class Game extends PApplet {
 
       centerAxis();
 
-      rotateZ(-imgProcessing.yRotation);
+      rotateZ(imgProcessing.yRotation);
       rotateX(imgProcessing.xRotation);
 
 
@@ -125,8 +129,8 @@ class Game extends PApplet {
       for (PVector position : cylinders) {
         cylinder.draw(position.x, -BOX_HEIGHT / 2, position.y, my_game);
       }
-      
-      ball.render(-imgProcessing.xRotation, -imgProcessing.yRotation);
+
+      ball.render(-imgProcessing.xRotation, imgProcessing.yRotation);
     }
   }
 

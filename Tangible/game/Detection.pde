@@ -2,7 +2,7 @@ import processing.video.*; //<>// //<>// //<>//
 import java.util.function.*;
 import gab.opencv.*;
 
-float discretizationStepsPhi = 0.06f;
+float discretizationStepsPhi = 0.01f;
 float discretizationStepsR = 2.5f;
 
 
@@ -19,7 +19,6 @@ HoughComparator compare;
 
 class ImageProcessing extends PApplet {
   OpenCV opencv;
-  PImage img;
   HScrollbar bar1 = new HScrollbar(0, 480, 640, 20);
   HScrollbar bar2 = new HScrollbar(0, 500, 640, 20);
   HScrollbar bar3 = new HScrollbar(0, 520, 640, 20);
@@ -38,12 +37,12 @@ class ImageProcessing extends PApplet {
    private static final int bMin = 0;
    private static final int bMax = 170;*/
 
-  /*private static final int hMin = 90;
+  private static final int hMin = 90;
   private static final int hMax = 140;
   private static final int sMin = 60;
   private static final int sMax = 255;
   private static final int bMin = 30;
-  private static final int bMax = 180;*/
+  private static final int bMax = 220;
 
 
   private static final int QUAD_BORDERS_NBR = 4;
@@ -69,7 +68,7 @@ class ImageProcessing extends PApplet {
     // The camera can be initialized directly using an 
     // element from the array returned by list():
 
-    rotations = new TwoDThreeD(width, height, 0);
+    rotations = new TwoDThreeD(width, height, 6);
 
     /*img.resize((int)(IMAGE_RESIZING_RATIO *img.width), (int)(IMAGE_RESIZING_RATIO *img.height));
      size(3 *img.width, img.height);*/
@@ -98,12 +97,12 @@ class ImageProcessing extends PApplet {
     bar5.update(imgProcessing);
     bar6.update(imgProcessing);
 
-    int hMin = (int)map(bar1.getPos(), 0, 1, 0, 255);
+    /*int hMin = (int)map(bar1.getPos(), 0, 1, 0, 255);
     int hMax = (int)map(bar2.getPos(), 0, 1, 0, 255);
     int sMin = (int)map(bar3.getPos(), 0, 1, 0, 255);
     int sMax = (int)map(bar4.getPos(), 0, 1, 0, 255);
     int bMin = (int)map(bar5.getPos(), 0, 1, 0, 255);
-    int bMax = (int)map(bar6.getPos(), 0, 1, 0, 255);
+    int bMax = (int)map(bar6.getPos(), 0, 1, 0, 255);*/
 
     background(color(255));
 
@@ -139,12 +138,9 @@ class ImageProcessing extends PApplet {
     }
     if (!bestQuads.isEmpty()) {
       PVector rotation = rotations.get3DRotations(bestQuads);
-      println(Math.toDegrees(rotation.x + (rotation.x > 0 ? -PI : PI)), Math.toDegrees(rotation.y));
-      println(Math.toDegrees(my_game.clamp(rotation.x + (rotation.x > 0 ? -PI : PI), -PI/3.0, PI/3.0)), Math.toDegrees(my_game.clamp(rotation.y, -PI/3.0, PI/3.0)));
-      //float degree_rotation = (float)Math.toDegrees(rotation.x);
-      xRotation = my_game.clamp(rotation.x + (rotation.x > 0 ? -PI : PI), -PI/3.0, PI/3.0);
-      yRotation = my_game.clamp(rotation.y, -PI/3.0, PI/3.0);
-      //yRotation = rotation.y;
+
+      xRotation = map(rotation.x + PI, -PI / 3, PI / 3, -1, 1);
+      yRotation = map(rotation.z, -PI / 3, PI / 3, -1, 1);
 
       for (PVector vector : bestQuads) {
         ellipse(vector.x, vector.y, 10, 10);

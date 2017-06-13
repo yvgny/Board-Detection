@@ -3,7 +3,6 @@ import java.math.BigDecimal;
 
 float ry;
 float rx;
-PImage img;
 float speed = 1;
 float SCROLLBAR_WIDTH;
 float SCROLLBAR_HEIGHT = 20;

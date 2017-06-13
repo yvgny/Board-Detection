@@ -59,8 +59,6 @@ class ImageProcessing extends PApplet {
 
   void settings() {
     size(640, 600);
-    //img = loadImage(BOARD_TO_LOAD);
-    //img.resize(640,480);
   }
 
   void setup() {
@@ -89,7 +87,6 @@ class ImageProcessing extends PApplet {
     cam.read();
     img = cam.get();
     img.loadPixels();
-
     bar1.update(imgProcessing);
     bar2.update(imgProcessing);
     bar3.update(imgProcessing);
@@ -98,11 +95,11 @@ class ImageProcessing extends PApplet {
     bar6.update(imgProcessing);
 
     /*int hMin = (int)map(bar1.getPos(), 0, 1, 0, 255);
-    int hMax = (int)map(bar2.getPos(), 0, 1, 0, 255);
-    int sMin = (int)map(bar3.getPos(), 0, 1, 0, 255);
-    int sMax = (int)map(bar4.getPos(), 0, 1, 0, 255);
-    int bMin = (int)map(bar5.getPos(), 0, 1, 0, 255);
-    int bMax = (int)map(bar6.getPos(), 0, 1, 0, 255);*/
+     int hMax = (int)map(bar2.getPos(), 0, 1, 0, 255);
+     int sMin = (int)map(bar3.getPos(), 0, 1, 0, 255);
+     int sMax = (int)map(bar4.getPos(), 0, 1, 0, 255);
+     int bMin = (int)map(bar5.getPos(), 0, 1, 0, 255);
+     int bMax = (int)map(bar6.getPos(), 0, 1, 0, 255);*/
 
     background(color(255));
 
@@ -122,8 +119,6 @@ class ImageProcessing extends PApplet {
     List<PVector> lines = hough(threshold_binary(img4, tbValue), QUAD_BORDERS_NBR);
 
     image(img4, 0, 0);
-    //image(img2, img.width, 0);
-    //image(img4, 2.0 *img.width, 0);
 
     drawLines(lines);
 

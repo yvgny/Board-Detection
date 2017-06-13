@@ -30,8 +30,6 @@ class ImageProcessing extends PApplet {
   QuadGraph graph;
   TwoDThreeD rotations;
 
-  Capture cam;
-
 
   /*private static final int hMin = 80;
    private static final int hMax = 135;
@@ -40,12 +38,12 @@ class ImageProcessing extends PApplet {
    private static final int bMin = 0;
    private static final int bMax = 170;*/
 
-  /*private static final int hMin = 100;
-   private static final int hMax = 180;
-   private static final int sMin = 50;
-   private static final int sMax = 255;
-   private static final int bMin = 0;
-   private static final int bMax = 255;*/
+  /*private static final int hMin = 90;
+  private static final int hMax = 140;
+  private static final int sMin = 60;
+  private static final int sMax = 255;
+  private static final int bMin = 30;
+  private static final int bMax = 180;*/
 
 
   private static final int QUAD_BORDERS_NBR = 4;
@@ -54,7 +52,7 @@ class ImageProcessing extends PApplet {
 
   private static final int tbValue = 230;
 
-  private static final String BOARD_TO_LOAD = "/Users/sachakozma/Documents/Dropbox/Documents/Ecole/EPFL/Semestre IV/Prog visuelle/visual/Tangible/game/data/board4.jpg";
+  private static final String BOARD_TO_LOAD = "board4.jpg";
 
   public float xRotation;
   public float yRotation;
@@ -67,14 +65,11 @@ class ImageProcessing extends PApplet {
   }
 
   void setup() {
-    String[] cameras = Capture.list();
 
     // The camera can be initialized directly using an 
     // element from the array returned by list():
-    cam = new Capture(this, 640, 480);
-    cam.start();
 
-    rotations = new TwoDThreeD(width, height, 12);
+    rotations = new TwoDThreeD(width, height, 0);
 
     /*img.resize((int)(IMAGE_RESIZING_RATIO *img.width), (int)(IMAGE_RESIZING_RATIO *img.height));
      size(3 *img.width, img.height);*/
@@ -144,15 +139,10 @@ class ImageProcessing extends PApplet {
     }
     if (!bestQuads.isEmpty()) {
       PVector rotation = rotations.get3DRotations(bestQuads);
-      float degree_rotation = (float)Math.toDegrees(rotation.x);
-      if (degree_rotation > 300) {
-       xRotation = rotation.x - 2*PI;
-       } else if (degree_rotation < -300) {
-       xRotation = rotation.x + 2*PI;
-       } else {
-       xRotation = rotation.x - PI;
-       }
-      xRotation = my_game.clamp(xRotation, -PI/3.0, PI/3.0);
+      println(Math.toDegrees(rotation.x + (rotation.x > 0 ? -PI : PI)), Math.toDegrees(rotation.y));
+      println(Math.toDegrees(my_game.clamp(rotation.x + (rotation.x > 0 ? -PI : PI), -PI/3.0, PI/3.0)), Math.toDegrees(my_game.clamp(rotation.y, -PI/3.0, PI/3.0)));
+      //float degree_rotation = (float)Math.toDegrees(rotation.x);
+      xRotation = my_game.clamp(rotation.x + (rotation.x > 0 ? -PI : PI), -PI/3.0, PI/3.0);
       yRotation = my_game.clamp(rotation.y, -PI/3.0, PI/3.0);
       //yRotation = rotation.y;
 

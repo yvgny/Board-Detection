@@ -57,7 +57,6 @@ class Game extends PApplet {
     score = new ArrayList();
     score.add(0.0);
     bufferScore = 0;
-    snowman = loadShape("/Users/sachakozma/Documents/Dropbox/Documents/Ecole/EPFL/Semestre IV/Prog visuelle/visual/Tangible/game/data/snowman.obj");
     snowman.scale(1.7);
     noStroke();
   }
@@ -116,8 +115,8 @@ class Game extends PApplet {
 
       centerAxis();
 
-      rotateZ(imgProcessing.yRotation);
-      rotateX(-imgProcessing.xRotation);
+      rotateZ(-imgProcessing.yRotation);
+      rotateX(imgProcessing.xRotation);
 
 
       box(BOX_LENGTH, BOX_HEIGHT, BOX_WIDTH);
@@ -127,7 +126,7 @@ class Game extends PApplet {
         cylinder.draw(position.x, -BOX_HEIGHT / 2, position.y, my_game);
       }
       
-      ball.render(imgProcessing.xRotation, imgProcessing.yRotation);
+      ball.render(-imgProcessing.xRotation, -imgProcessing.yRotation);
     }
   }
 

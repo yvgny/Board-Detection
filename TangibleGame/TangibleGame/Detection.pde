@@ -134,7 +134,7 @@ class ImageProcessing extends PApplet {
     if (!bestQuads.isEmpty()) {
       PVector rotation = rotations.get3DRotations(bestQuads);
 
-      xRotation = map(rotation.x + PI, -PI / 3, PI / 3, -1, 1);
+      xRotation = map(rotation.x - PI, -PI / 3, PI / 3, -1, 1);
       yRotation = map(rotation.z, -PI / 3, PI / 3, -1, 1);
 
       for (PVector vector : bestQuads) {

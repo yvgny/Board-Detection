@@ -6,7 +6,7 @@ void settings() {
 }
 
 void setup() {
-  cam = new Movie(this, "blackvideo.avi");
+  cam = new Movie(this, "testvideo.avi");
   cam.loop();
   snowman = loadShape("snowman.obj");
   imgProcessing = new ImageProcessing();

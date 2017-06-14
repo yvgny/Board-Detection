@@ -1,8 +1,6 @@
 import java.util.Collections;
 import java.math.BigDecimal;
 
-float ry;
-float rx;
 float speed = 1;
 float SCROLLBAR_WIDTH;
 float SCROLLBAR_HEIGHT = 20;
@@ -42,8 +40,6 @@ class Game extends PApplet {
 
   void setup() {
     currentTime = millis();
-    ry = 0;
-    rx = 0;
     bar_background = createGraphics(width, SCORE_BAR_HEIGHT, P2D);
     bar_topView = createGraphics(SCORE_BAR_HEIGHT - SCORE_BAR_BORDER, SCORE_BAR_HEIGHT - SCORE_BAR_BORDER, P2D);
     bar_scoreBoard = createGraphics((int)(SCORE_BAR_HEIGHT * 4.0 / 5.0 - SCORE_BAR_BORDER), SCORE_BAR_HEIGHT - SCORE_BAR_BORDER, P2D);
@@ -194,11 +190,11 @@ class Game extends PApplet {
       return;
     }
 
-    ry -= (mouseY - pmouseY) / 300.0 * speed;
-    ry = clamp(ry, -PI/3, PI/3);
+    imgProcessing.xRotation -= (mouseY - pmouseY) / 300.0 * speed;
+    imgProcessing.xRotation = clamp(imgProcessing.xRotation, -PI/3, PI/3);
 
-    rx += (mouseX - pmouseX) / 300.0 * speed;
-    rx = clamp(rx, -PI/3, PI/3);
+    imgProcessing.yRotation += (mouseX - pmouseX) / 300.0 * speed;
+    imgProcessing.yRotation = clamp(imgProcessing.yRotation, -PI/3, PI/3);
   }
 
   float clamp(float num, float min, float max) {

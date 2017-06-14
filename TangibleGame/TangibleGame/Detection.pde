@@ -67,6 +67,9 @@ class ImageProcessing extends PApplet {
     // element from the array returned by list():
 
     rotations = new TwoDThreeD(width, height, 6);
+    
+    xRotation = 0;
+    yRotation = 0;
 
     /*img.resize((int)(IMAGE_RESIZING_RATIO *img.width), (int)(IMAGE_RESIZING_RATIO *img.height));
      size(3 *img.width, img.height);*/
@@ -134,9 +137,10 @@ class ImageProcessing extends PApplet {
     if (!bestQuads.isEmpty()) {
       PVector rotation = rotations.get3DRotations(bestQuads);
 
-      xRotation = map(rotation.x - PI, -PI / 3, PI / 3, -1, 1);
-      yRotation = map(rotation.z, -PI / 3, PI / 3, -1, 1);
-
+      if (!manualMode) {
+        xRotation = map(rotation.x - PI, -PI / 3, PI / 3, -1, 1);
+        yRotation = map(rotation.z, -PI / 3, PI / 3, -1, 1);
+      }
       for (PVector vector : bestQuads) {
         ellipse(vector.x, vector.y, 10, 10);
       }

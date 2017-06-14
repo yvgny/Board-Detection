@@ -32,6 +32,7 @@ HScrollbar scrollbar;
 PShape snowman;
 ImageProcessing imgProcessing;
 Game my_game;
+boolean manualMode;
 
 class Game extends PApplet {
   void settings() {
@@ -54,6 +55,7 @@ class Game extends PApplet {
     score.add(0.0);
     bufferScore = 0;
     snowman.scale(1.7);
+    manualMode = false;
     noStroke();
   }
 
@@ -97,9 +99,11 @@ class Game extends PApplet {
         cylinder.draw(position.x + width/2, position.y + width/2, BOX_HEIGHT / 2, my_game);
       }
     } else {
+
       clearScoreBuffer();
       cylinder = new Cylinder(CYLINDER_BASESIZE, CYLINDER_HEIGHT, false);
       drawScore();
+
       image(bar_background, 0, height - SCORE_BAR_HEIGHT);
       image(bar_topView, SCORE_BAR_BORDER / 2, height - SCORE_BAR_HEIGHT + SCORE_BAR_BORDER / 2);
       image(bar_scoreBoard, SCORE_BAR_BORDER + bar_topView.width, height - SCORE_BAR_HEIGHT + SCORE_BAR_BORDER / 2);
@@ -111,6 +115,7 @@ class Game extends PApplet {
       noStroke();
       directionalLight(50, 100, 125, -1, 1, -1);
       ambientLight(102, 102, 102);
+      text("Manual control " + (manualMode ? "enabled" : "disabled") + ". Press CTRL to switch.", 1.0/4.0 * WINDOW_WIDTH, 20);
 
       centerAxis();
 
@@ -185,7 +190,7 @@ class Game extends PApplet {
   }
 
   void mouseDragged() {
-    if (mouseY > height - SCORE_BAR_HEIGHT || SHIFTpressed) {
+    if (!manualMode || mouseY > height - SCORE_BAR_HEIGHT || SHIFTpressed) {
       return;
     }
 
@@ -211,6 +216,8 @@ class Game extends PApplet {
   void keyPressed() {
     if (keyCode == SHIFT) 
       SHIFTpressed = true;
+    else if (keyCode == CONTROL)
+      manualMode = !manualMode;
   }
 
   void keyReleased() {

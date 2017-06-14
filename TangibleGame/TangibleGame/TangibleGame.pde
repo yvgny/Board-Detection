@@ -195,6 +195,8 @@ class Game extends PApplet {
 
     imgProcessing.yRotation += (mouseX - pmouseX) / 300.0 * speed;
     imgProcessing.yRotation = clamp(imgProcessing.yRotation, -PI/3, PI/3);
+    
+    println("xRot = " + imgProcessing.xRotation + ", yRot = " + imgProcessing.yRotation + ".");
   }
 
   float clamp(float num, float min, float max) {

@@ -115,8 +115,10 @@ class Game extends PApplet {
       noStroke();
       directionalLight(50, 100, 125, -1, 1, -1);
       ambientLight(102, 102, 102);
-      text("Manual control " + (manualMode ? "enabled" : "disabled") + ". Press CTRL to switch.", 1.0/4.0 * WINDOW_WIDTH, 20);
-
+      text("Manual control " + (manualMode ? "enabled" : "disabled") + ". Press CTRL to switch.", 1.0/5.0 * WINDOW_WIDTH + 20, 20);
+      if (manualMode) {
+        text("Manual control speed = " + speed + ".", 1.0/5.0 * WINDOW_WIDTH + 20, 40);
+      }
       centerAxis();
 
       rotateZ(imgProcessing.yRotation);
